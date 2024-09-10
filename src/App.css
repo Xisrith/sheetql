@@ -29,3 +29,21 @@
 .small {
   font-size: 0.75rem;
 }
+
+table {
+  border-collapse: collapse;
+}
+
+th, td {
+  border: 1px solid black;
+  padding: 4px;
+}
+
+tbody tr:nth-child(odd) {
+  background-color: aliceblue;
+}
+
+.fill {
+  height: 100%;
+  width: 100%;
+}

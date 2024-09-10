@@ -1,5 +1,5 @@
 {
-  "name": "codespaces-react",
+  "name": "sheetql",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -9,6 +9,7 @@
     "@testing-library/user-event": "^14.4.3",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-resizable-panels": "^2.1.2",
     "web-vitals": "^3.1.0"
   },
   "overrides": {
@@ -18,7 +19,8 @@
   },
   "scripts": {
     "start": "BROWSER=none WDS_SOCKET_PORT=0 vite --port 3000",
-    "build": "vite build",
+    "dev": "vite --port 3000",
+    "build": "tsc -b && vite build",
     "preview": "vite preview",
     "test": "vitest"
   },
@@ -41,8 +43,11 @@
     ]
   },
   "devDependencies": {
+    "@types/react": "^18.3.5",
+    "@types/react-dom": "^18.3.0",
     "@vitejs/plugin-react": "^4.1.1",
     "jsdom": "^22.1.0",
+    "typescript": "^5.5.4",
     "vite": "^4.5.3",
     "vitest": "^0.34.6"
   }

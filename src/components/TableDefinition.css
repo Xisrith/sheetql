@@ -1,0 +1,31 @@
+.table-definition {
+  button {
+    background: none;
+    border: 0;
+    font-size: 14px;
+    padding: 4px 0;
+    text-align: left;
+    text-wrap: nowrap;
+    width: 100%;
+    &:hover {
+      background-color: #E0E0E0;
+    }
+
+    span {
+      display: inline-block;
+      text-align: center;
+      width: 24px;
+    }
+  }
+
+  ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+
+    li {
+      padding-left: 32px;
+      text-wrap: nowrap;
+    }
+  }
+}

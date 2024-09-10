@@ -1,4 +1,3 @@
-import reportWebVitals from "../reportWebVitals";
 import { initSQLite } from "./init";
 
 type SQLitePromiserCallbackResult = {

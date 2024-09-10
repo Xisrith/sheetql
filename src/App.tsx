@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Panel, PanelGroup, PanelResizeHandle } from 'react-resizable-panels';
 import './App.css';
-import { sqlite } from './sqlite/sqlite';
+import { sqlite } from './sqlite';
 import { Sidebar } from './components/Sidebar';
 
 function App() {
@@ -83,8 +83,8 @@ function App() {
                     </tr>
                   </thead>
                   <tbody>
-                    {rows.map(r => (
-                      <tr>{r.map((d, i) => <td key={i}>{d}</td>)}</tr>
+                    {rows.map((r, i) => (
+                      <tr key={i}>{r.map((d, i) => <td key={i}>{d}</td>)}</tr>
                     ))}
                   </tbody>
                 </table>

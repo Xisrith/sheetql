@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
-import { sqlite } from '../sqlite/sqlite';
+import { sqlite } from '../sqlite';
 import { TableDefinition } from './TableDefinition';
 import { DragDrop } from './DragDrop';
 

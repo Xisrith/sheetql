@@ -1,3 +1,4 @@
+import { SQLiteResults, SQLiteRunner } from "../types";
 import { initSQLite } from "./init";
 
 type SQLitePromiserCallbackResult = {
@@ -9,12 +10,7 @@ type SQLitePromiserCallbackResult = {
 
 type SQLiteState = 'loading' | 'loaded' | 'unloaded'; 
 
-type SQLiteResults = {
-  columns: string[],
-  rows: any[][],
-};
-
-export class SQLite {
+export class SQLiteOpfs implements SQLiteRunner {
   private _initPromise?: Promise<void>;
   private _state: SQLiteState = 'unloaded';
 
@@ -103,5 +99,3 @@ export class SQLite {
     this._isProcessing = false;
   }
 }
-
-export const sqlite = new SQLite();

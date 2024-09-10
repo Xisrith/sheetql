@@ -51,6 +51,13 @@ export class SQLiteMain implements SQLiteRunner {
           columnNames: columns,
           resultRows: rows,
         });
+
+        // If the query doesn't provide its own results,
+        // we'll add one just to say that the query is done.
+        if (columns.length === 0 && rows.length === 0) {
+          columns.push('Result');
+          rows.push(['Query ran successfully']);
+        }
       } catch (error: any) {
         console.error(error);
         columns = ['Error Class', 'Error Message'];

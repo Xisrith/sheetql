@@ -1,32 +1,36 @@
 import { useState } from 'react';
 import './TableDefinition.css';
 
-type TableDef = {
-  name: string,
+interface TableDef {
+  name: string;
   columns: {
-    cid: number,
-    name: string,
-    type: string,
-    isNotNull: boolean,
-    isPrimaryKey: boolean,
+    cid: number;
+    name: string;
+    type: string;
+    isNotNull: boolean;
+    isPrimaryKey: boolean;
   }[];
-};
+}
 
-type Props = {
-  definition: TableDef,
-};
+interface Props {
+  definition: TableDef;
+  onDelete: () => void;
+}
 
-export const TableDefinition = ({ definition }: Props) => {
+export const TableDefinition = ({ definition, onDelete }: Props) => {
   const [open, setOpen] = useState<boolean>(false);
 
   return (
     <div className="table-definition">
-      <button onClick={() => setOpen(!open)}>
-        <span>
-          {open ? '[-]' : '[+]'}
-        </span>
-        <label>{definition.name}</label>
-      </button>
+      <div className="background-button">
+        <button className="expand-button" onClick={() => setOpen(!open)}>
+          {open ? '-' : '+'}
+        </button>
+        <label onClick={() => setOpen(!open)}>{definition.name}</label>
+        <button onClick={onDelete}>
+          Delete
+        </button>
+      </div>
       <div>
         {open && (
           <ul>

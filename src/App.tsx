@@ -61,6 +61,14 @@ function App() {
                     resize: 'none',
                   }}
                   onChange={result => setSql(result.target.value)}
+                  onKeyDown={(event) => {
+                    if (event.key === 'Enter' && event.ctrlKey) {
+                      sqlite.exec(sql).then(result => {
+                        setCols(result.columns);
+                        setRows(result.rows);
+                      });
+                    }
+                  }}
                 />
               </div>
             </Panel>
@@ -98,29 +106,3 @@ function App() {
 }
 
 export default App;
-
-{/* <header>
-  <textarea onChange={result => setSql(result.target.value)} />
-  <button
-    onClick={
-      () => sqlite.exec(sql).then(result => {
-        setCols(result.columns);
-        setRows(result.rows);
-      })
-    }
-  >
-    Submit
-  </button>
-  <table style={{border: '1px solid white'}}>
-    <thead>
-      <tr>
-        {cols.map(c => <th>{c}</th>)}
-      </tr>
-    </thead>
-    <tbody>
-      {rows.map(r => (
-        <tr>{r.map(d => <td>{d}</td>)}</tr>
-      ))}
-    </tbody>
-  </table>
-</header> */}

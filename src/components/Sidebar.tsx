@@ -42,6 +42,14 @@ export const Sidebar = () => {
     setTables(tableDefs);
   }, [setTables]);
 
+  const handleDelete = useCallback(async (table: string) => {
+    await sqlite.init();
+
+    await sqlite.exec(`DROP TABLE ${table}`);
+
+    await handleRefresh();
+  }, [handleRefresh]);
+
   useEffect(() => {
     handleRefresh()
   }, [handleRefresh]);
@@ -63,7 +71,7 @@ export const Sidebar = () => {
       </div>
       <div style={{ overflowY: 'auto' }}>
         {tables.map((table, index) => (
-          <TableDefinition definition={table} key={index} />
+          <TableDefinition key={index} definition={table} onDelete={() => handleDelete(table.name)} />
         ))}
       </div>
       <DragDrop />

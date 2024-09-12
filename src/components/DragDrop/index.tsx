@@ -1,16 +1,16 @@
 import React, { useState } from 'react';
 import './index.css';
+import { ImportModal } from './ImportModal';
 
 export const DragDrop = () => {
   const [drag, setDrag] = useState<boolean>(false);
+  const [file, setFile] = useState<File | null>(null);
   const handleDrop = (event: React.DragEvent<HTMLDivElement>) => {
     event.preventDefault();
     const droppedFiles = event.dataTransfer.files;
-    droppedFiles.item(0)?.text().then(result => console.log(result));
-    console.log(droppedFiles);
     setDrag(false);
+    setFile(droppedFiles.item(0));
   };
-
 
   return (
     <section className="drag-drop">
@@ -33,6 +33,7 @@ export const DragDrop = () => {
           </div>
         </div>
       </div>
+      <ImportModal file={file} onCancel={() => setFile(null)} />
     </section>
   );
 };

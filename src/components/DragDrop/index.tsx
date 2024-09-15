@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import './index.css';
-import { ImportModal } from './ImportModal';
+import { ImportModal } from '../ImportModal';
 
 export const DragDrop = () => {
   const [drag, setDrag] = useState<boolean>(false);
@@ -33,7 +33,7 @@ export const DragDrop = () => {
           </div>
         </div>
       </div>
-      <ImportModal file={file} onCancel={() => setFile(null)} />
+      <ImportModal open={false} onCancel={() => setFile(null)} />
     </section>
   );
 };

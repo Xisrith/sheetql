@@ -1,4 +1,4 @@
-import { PropsWithChildren, useEffect, useRef } from "react";
+import { PropsWithChildren, useEffect, useRef } from 'react';
 
 interface Props {
   open: boolean;
@@ -23,6 +23,7 @@ export const Dialog = ({
   return (
     <dialog
       ref={ref}
+      style={{ position: 'relative' }}
       onCancel={() => onCancel()}
       onClick={(event) => {
         if (ref.current) {

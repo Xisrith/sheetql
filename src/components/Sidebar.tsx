@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import { sqlite } from '../sqlite';
 import { TableDefinition } from './TableDefinition';
-import { DragDrop } from './DragDrop';
+import { ImportModal } from './ImportModal';
 
 type TableDef = {
   name: string,
@@ -15,6 +15,7 @@ type TableDef = {
 }
 
 export const Sidebar = () => {
+  const [dialogOpen, setDialogOpen] = useState<boolean>(false);
   const [tables, setTables] = useState<TableDef[]>([]);
   
   const handleRefresh = useCallback(async () => {
@@ -58,23 +59,24 @@ export const Sidebar = () => {
     <div style={{
       backgroundColor: '#F5F5F5',
       height: '100%',
-      overflowX: 'auto'
     }}>
       <div
         style={{
           display: 'flex',
           flexDirection: 'row',
+          gap: 4,
         }}
       >
         <label style={{ flexGrow: 1 }}>Tables</label>
+        <button onClick={() => setDialogOpen(true)}>Import</button>
         <button onClick={handleRefresh}>Refresh</button>
       </div>
-      <div style={{ overflowY: 'auto' }}>
+      <div style={{ overflowX: 'hidden', overflowY: 'auto' }}>
         {tables.map((table, index) => (
           <TableDefinition key={index} definition={table} onDelete={() => handleDelete(table.name)} />
         ))}
       </div>
-      <DragDrop />
+      <ImportModal open={dialogOpen} onCancel={() => setDialogOpen(false)} />
     </div>
   );
 };

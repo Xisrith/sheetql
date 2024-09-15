@@ -4,7 +4,7 @@ import { ImportModal } from '../ImportModal';
 
 export const DragDrop = () => {
   const [drag, setDrag] = useState<boolean>(false);
-  const [file, setFile] = useState<File | null>(null);
+  const [_, setFile] = useState<File | null>(null);
   const handleDrop = (event: React.DragEvent<HTMLDivElement>) => {
     event.preventDefault();
     const droppedFiles = event.dataTransfer.files;

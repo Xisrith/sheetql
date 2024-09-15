@@ -3,6 +3,7 @@ import { Panel, PanelGroup, PanelResizeHandle } from 'react-resizable-panels';
 import './App.css';
 import { sqlite } from './sqlite';
 import { Sidebar } from './components/Sidebar';
+import { MonacoEditor } from './monaco/MonacoEditor';
 
 function App() {
   const [sql, setSql] = useState<string>('');
@@ -55,24 +56,20 @@ function App() {
                     Run Query
                   </button>
                 </div>
-                <textarea
-                  style={{
-                    flexGrow: 1,
-                    resize: 'none',
+                <MonacoEditor
+                  onChange={value => {
+                    setSql(value);
                   }}
-                  onChange={result => setSql(result.target.value)}
-                  onKeyDown={(event) => {
-                    if (event.key === 'Enter' && event.ctrlKey) {
-                      sqlite.exec(sql).then(result => {
-                        setCols(result.columns);
-                        setRows(result.rows);
-                      });
-                    }
+                  onSubmit={value => {
+                    sqlite.exec(value).then(result => {
+                      setCols(result.columns);
+                      setRows(result.rows);
+                    });
                   }}
                 />
               </div>
             </Panel>
-            <PanelResizeHandle />
+            <PanelResizeHandle style={{ backgroundColor: 'black', height: 2 }} />
             <Panel defaultSize={10}>
               <div
                 className="fill"

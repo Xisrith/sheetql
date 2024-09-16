@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import * as monaco from 'monaco-editor';
+import { getSuggestions } from './suggestions';
 
 interface Props {
   onChange?: (value: string) => void;
@@ -67,6 +68,26 @@ export const MonacoEditor = ({ onChange, onSubmit }: Props) => {
       return () => trigger.dispose();
     }
   }, [editor, onChange]);
+
+  // Setup code completion
+  useEffect(() => {
+    const provider = monaco.languages.registerCompletionItemProvider('sql', {
+      provideCompletionItems: (model: monaco.editor.ITextModel, position: monaco.Position) => {
+        const word = model.getWordUntilPosition(position);
+        const range = new monaco.Range(
+          position.lineNumber,
+          word.startColumn,
+          position.lineNumber,
+          word.endColumn,
+        );
+        return {
+          suggestions: getSuggestions(range),
+        };
+      },
+    });
+
+    return () => provider.dispose();
+  }, []);
 
   return <div ref={divRef} style={{ height: '100%', width: '100%' }} />
 };

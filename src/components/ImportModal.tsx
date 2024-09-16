@@ -152,10 +152,10 @@ export const ImportModal = ({ open, onCancel }: Props) => {
     const tableColumns = customHeaders.map((_, i) => {
       const columnName = (dataHasHeaders ? data[0][i] : undefined) || customHeaders[i] || defaultHeaders[i];
       const columnType = dataHasHeaders ? bodyTypes[i] : fullTypes[i];
-      return `${columnName} ${columnType}`;
+      return `[${columnName}] ${columnType}`;
     });
     
-    const createTableSql = `CREATE TABLE IF NOT EXISTS [${tableName}] (${tableColumns.map(c => `[${c}]`).join(', ')})`;
+    const createTableSql = `CREATE TABLE IF NOT EXISTS [${tableName}] (${tableColumns.join(', ')})`;
     await sqlite.exec(createTableSql);
     for (let i = dataHasHeaders ? 1 : 0; i < data.length; i++) {
       const insertRowSql = `INSERT INTO [${tableName}] VALUES (${data[i].map(() => '?').join(', ')})`;

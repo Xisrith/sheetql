@@ -1,5 +1,9 @@
 import { useState } from 'react';
 import './TableDefinition.css';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faSquareMinus, faSquarePlus } from '@fortawesome/free-regular-svg-icons';
+import { faTrashCan } from '@fortawesome/free-regular-svg-icons/faTrashCan';
+import { TypeIcon } from './Common/TypeIcon';
 
 interface TableDef {
   name: string;
@@ -23,12 +27,12 @@ export const TableDefinition = ({ definition, onDelete }: Props) => {
   return (
     <div className="table-definition">
       <div className="background-button">
-        <button className="expand-button" onClick={() => setOpen(!open)}>
-          {open ? '-' : '+'}
+        <button title={open ? "Show less" : "Show more"} className="btn-icon" onClick={() => setOpen(!open)}>
+          <FontAwesomeIcon icon={open ? faSquareMinus : faSquarePlus} />
         </button>
         <label onClick={() => setOpen(!open)}>{definition.name}</label>
-        <button onClick={onDelete}>
-          Delete
+        <button className="btn-icon" title="Delete table"onClick={onDelete}>
+          <FontAwesomeIcon icon={faTrashCan} />
         </button>
       </div>
       <div>
@@ -36,7 +40,7 @@ export const TableDefinition = ({ definition, onDelete }: Props) => {
           <ul>
             {definition.columns.map(column => (
               <li key={column.cid}>
-                {column.name} {column.type}{column.isNotNull ? ' NOT NULL' : ''}
+                <TypeIcon type={column.type} /> {column.name}{column.isNotNull ? ' NOT NULL' : ''}
               </li>
             ))}
           </ul>

@@ -3,6 +3,7 @@ import { parse } from 'csv-parse/browser/esm/sync';
 import { Dialog } from './Common/Dialog';
 import { sqlite } from '../sqlite';
 import { Spinner } from './Common/Spinner';
+import { TypeIcon } from './Common/TypeIcon';
 
 type Props = {
   open: boolean;
@@ -87,7 +88,7 @@ export const ImportModal = ({ open, onCancel }: Props) => {
     const _bodyTypes = [];
     const _fullTypes = [];
     for (let i = 0; i < data[0].length; i++) {
-      _defaultHeaders.push(`column_${0}`);
+      _defaultHeaders.push(`column_${i}`);
       _customHeaders.push('');
       _fullTypes.push('INTEGER');
     }
@@ -235,8 +236,8 @@ export const ImportModal = ({ open, onCancel }: Props) => {
                       <tr style={{ border: '1px solid black' }}>
                         {data[0].map((head, headIndex) => (
                           <th key={`head_${headIndex}`} style={{  }}>
-                            <div style={{ display: 'flex', flexDirection: 'row', gap: 4 }}>
-                              {dataHasHeaders ? iconFromType(bodyTypes[headIndex]) : iconFromType(fullTypes[headIndex])}
+                            <div style={{ alignItems: 'center', display: 'flex', flexDirection: 'row', gap: 4 }}>
+                              <TypeIcon type={dataHasHeaders ? bodyTypes[headIndex] : fullTypes[headIndex]} />
                               {dataHasHeaders ? head : <input placeholder={defaultHeaders[headIndex]} value={customHeaders[headIndex]} style={{ flexGrow: 1 }} onChange={e => setCustomHeader(headIndex, e.target.value)}/>}
                             </div>
                           </th>

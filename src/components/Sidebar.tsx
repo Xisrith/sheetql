@@ -2,6 +2,9 @@ import { useCallback, useEffect, useState } from 'react';
 import { sqlite } from '../sqlite';
 import { TableDefinition } from './TableDefinition';
 import { ImportModal } from './ImportModal';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faArrowUpFromBracket } from '@fortawesome/free-solid-svg-icons/faArrowUpFromBracket';
+import { faArrowsRotate } from '@fortawesome/free-solid-svg-icons/faArrowsRotate';
 
 type TableDef = {
   name: string,
@@ -65,11 +68,12 @@ export const Sidebar = () => {
           display: 'flex',
           flexDirection: 'row',
           gap: 4,
+          padding: 4,
         }}
       >
         <label style={{ flexGrow: 1 }}>Tables</label>
-        <button onClick={() => setDialogOpen(true)}>Import</button>
-        <button onClick={handleRefresh}>Refresh</button>
+        <button className="btn-icon" title="Import CSV" onClick={() => setDialogOpen(true)}><FontAwesomeIcon icon={faArrowUpFromBracket} /></button>
+        <button className="btn-icon" title="Refresh Tables" onClick={handleRefresh}><FontAwesomeIcon icon={faArrowsRotate} /></button>
       </div>
       <div style={{ overflowX: 'hidden', overflowY: 'auto' }}>
         {tables.map((table, index) => (

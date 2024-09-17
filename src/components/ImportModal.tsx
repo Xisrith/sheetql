@@ -200,21 +200,30 @@ export const ImportModal = ({ open, onCancel }: Props) => {
                     display: 'grid',
                     gridTemplateColumns: 'max-content auto',
                     gridGap: '4px',
+                    marginBottom: 8,
                   }}
                 >
                   <label htmlFor="table-name">Table Name</label>
                   <input id="table-name" placeholder={defaultTableName} value={customTableName} onChange={e => handleTableNameInput(e.target.value)} />
                   {customTableNameError && <label style={{ color: 'red', fontSize: 12, fontStyle: 'italic', gridColumn: 2 }}>{customTableNameError}</label>}
                   <label>Delimiter</label>
-                  <div>
-                    <input defaultChecked={true} id="delimiter-comma" name="delimiter" type="radio" value="," onChange={e => setDelimiter(e.target.value)} />
-                    <label htmlFor="delimiter-comma">Comma <kbd>,</kbd></label>
-                    <input id="delimiter-pipe" name="delimiter" type="radio" value="|" onChange={e => setDelimiter(e.target.value)}/>
-                    <label htmlFor="delimiter-pipe">Pipe <kbd>|</kbd></label>
-                    <input id="delimiter-space" name="delimiter" type="radio" value=" " onChange={e => setDelimiter(e.target.value)}/>
-                    <label htmlFor="delimiter-space">Space</label>
-                    <input id="delimiter-custom" name="delimiter" type="radio" value="custom" onChange={e => setDelimiter(e.target.value)}/>
-                    <label htmlFor="delimiter-custom">Custom</label>
+                  <div style={{ display: 'flex', flexDirection: 'row', gap: 8 }}>
+                    <div>
+                      <input defaultChecked={true} id="delimiter-comma" name="delimiter" type="radio" value="," onChange={e => setDelimiter(e.target.value)} />
+                      <label htmlFor="delimiter-comma">Comma <kbd>,</kbd></label>
+                    </div>
+                    <div>
+                      <input id="delimiter-pipe" name="delimiter" type="radio" value="|" onChange={e => setDelimiter(e.target.value)}/>
+                      <label htmlFor="delimiter-pipe">Pipe <kbd>|</kbd></label>
+                    </div>
+                    <div>
+                      <input id="delimiter-space" name="delimiter" type="radio" value=" " onChange={e => setDelimiter(e.target.value)}/>
+                      <label htmlFor="delimiter-space">Space</label>
+                    </div>
+                    <div>
+                      <input id="delimiter-custom" name="delimiter" type="radio" value="custom" onChange={e => setDelimiter(e.target.value)}/>
+                      <label htmlFor="delimiter-custom">Custom</label>
+                    </div>
                   </div>
                   {delimiter === 'custom' && <input style={{ gridColumn: 2 }} value={customDelimiter} onChange={e => handleCustomDelimiterInput(e.target.value)}/>}
                   {delimiter === 'custom' && customDelimiterError && <label style={{ color: 'red', fontSize: 12, fontStyle: 'italic', gridColumn: 2 }}>{customDelimiterError}</label>}

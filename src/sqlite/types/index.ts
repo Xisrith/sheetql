@@ -1,4 +1,5 @@
 export interface SQLiteResults {
+  isError: boolean;
   columns: string[];
   rows: any[][];
 }

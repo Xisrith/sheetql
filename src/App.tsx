@@ -4,11 +4,15 @@ import './App.css';
 import { sqlite } from './sqlite';
 import { Sidebar } from './components/Sidebar';
 import { MonacoEditor } from './monaco/MonacoEditor';
+import { SQLiteResults } from './sqlite/types';
 
 function App() {
   const [sql, setSql] = useState<string>('');
-  const [cols, setCols] = useState<string[]>([]);
-  const [rows, setRows] = useState<any[][]>([]);
+  const [result, setResult] = useState<SQLiteResults>({
+    isError: false,
+    columns: [],
+    rows: [],
+  });
 
   useEffect(() => {
     sqlite.init().then(() => {
@@ -25,7 +29,7 @@ function App() {
       }}
     >
       <PanelGroup direction="horizontal">
-        <Panel defaultSize={10} minSize={10}>
+        <Panel defaultSize={15} minSize={10}>
           <Sidebar />
         </Panel>
         <PanelResizeHandle />
@@ -45,32 +49,18 @@ function App() {
                     flexDirection: 'row',
                   }}
                 >
-                  <button
-                    onClick={
-                      () => sqlite.exec(sql).then(result => {
-                        setCols(result.columns);
-                        setRows(result.rows);
-                      })
-                    }
-                  >
+                  <button onClick={() => sqlite.exec(sql).then(setResult)}>
                     Run Query
                   </button>
                 </div>
                 <MonacoEditor
-                  onChange={value => {
-                    setSql(value);
-                  }}
-                  onSubmit={value => {
-                    sqlite.exec(value).then(result => {
-                      setCols(result.columns);
-                      setRows(result.rows);
-                    });
-                  }}
+                  onChange={value => setSql(value)}
+                  onSubmit={value => sqlite.exec(value).then(setResult)}
                 />
               </div>
             </Panel>
             <PanelResizeHandle style={{ backgroundColor: 'black', height: 2 }} />
-            <Panel defaultSize={10}>
+            <Panel defaultSize={20}>
               <div
                 className="fill"
                 style={{
@@ -79,16 +69,17 @@ function App() {
               >
                 <table
                   style={{
+                    color: result.isError ? 'red' : 'unset',
                     textAlign: 'left',
                   }}
                 >
                   <thead>
                     <tr>
-                      {cols.map((c, i) => <th key={i}>{c}</th>)}
+                      {result.columns.map((c, i) => <th key={i}>{c}</th>)}
                     </tr>
                   </thead>
                   <tbody>
-                    {rows.map((r, i) => (
+                    {result.rows.map((r, i) => (
                       <tr key={i}>{r.map((d, i) => <td key={i}>{d}</td>)}</tr>
                     ))}
                   </tbody>

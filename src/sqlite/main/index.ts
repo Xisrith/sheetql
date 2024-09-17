@@ -1,4 +1,4 @@
-import { Database } from '@sqlite.org/sqlite-wasm';
+import { Database, SQLite3Error } from '@sqlite.org/sqlite-wasm';
 import { SQLiteResults, SQLiteRunner } from '../types';
 import { initSQLite } from './init';
 
@@ -41,6 +41,7 @@ export class SQLiteMain implements SQLiteRunner {
 
     // Setup our exec task (we only want to run one of these at a time).
     const execTask = async () => {
+      let isError = false;
       let columns: string[] = [];
       let rows: any[][] = [];
 
@@ -58,14 +59,15 @@ export class SQLiteMain implements SQLiteRunner {
           columns.push('Result');
           rows.push(['Query ran successfully']);
         }
-      } catch (error: any) {
-        console.error(error);
-        columns = ['Error Class', 'Error Message'];
+      } catch (error: unknown) {
+        const { name, message } = (error as SQLite3Error);
+        isError = true;
+        columns = ['Error', 'Message'];
         rows = [
-          [error.result.errorClass, error.result.message]
+          [name, message],
         ];
       } finally {
-        deferResolve({ columns, rows });
+        deferResolve({ isError, columns, rows });
       }
     };
     this._execQueue.push(execTask);

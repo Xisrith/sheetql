@@ -62,19 +62,6 @@ export const ImportModal = ({ open, onCancel }: Props) => {
   const [bodyTypes, setBodyTypes] = useState<string[]>([]);
   const [fullTypes, setFullTypes] = useState<string[]>([]);
 
-  const iconFromType = (type: string) => {
-    switch (type) {
-      case 'INTEGER':
-        return <kbd>#</kbd>;
-      case 'REAL':
-        return <kbd>.</kbd>;
-      case 'TEXT':
-        return <kbd>T</kbd>;
-      default:
-        return <kbd>?</kbd>;
-    }
-  }
-
   useEffect(() => {
     if (!hasData()) {
       setDefaultHeaders([]);

@@ -76,7 +76,7 @@ export class SQLiteOpfs implements SQLiteRunner {
           [error.result.errorClass, error.result.message]
         ];
       } finally {
-        deferResolve({ columns, rows });
+        deferResolve({ columns, rows, isError: false });
       }
     };
     this._execQueue.push(execTask);

@@ -32,7 +32,7 @@ function App() {
         <Panel defaultSize={15} minSize={10}>
           <Sidebar />
         </Panel>
-        <PanelResizeHandle />
+        <PanelResizeHandle style={{ backgroundColor: 'black', width: 1 }} />
         <Panel>
           <PanelGroup direction="vertical">
             <Panel>
@@ -59,7 +59,7 @@ function App() {
                 />
               </div>
             </Panel>
-            <PanelResizeHandle style={{ backgroundColor: 'black', height: 2 }} />
+            <PanelResizeHandle style={{ backgroundColor: 'black', height: 1 }} />
             <Panel defaultSize={20}>
               <div
                 className="fill"

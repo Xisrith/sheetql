@@ -1,10 +1,10 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { sqlite } from '../sqlite';
-import { TableDefinition } from './TableDefinition';
 import { ImportModal } from './ImportModal';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faArrowUpFromBracket } from '@fortawesome/free-solid-svg-icons/faArrowUpFromBracket';
-import { faArrowsRotate } from '@fortawesome/free-solid-svg-icons/faArrowsRotate';
+import { Button, Flex, Typography, Tree } from 'antd';
+const { Text } = Typography;
+import { DeleteTwoTone, ImportOutlined, ReloadOutlined } from '@ant-design/icons';
+import { TypeIcon } from './Common/TypeIcon';
 
 type TableDef = {
   name: string,
@@ -20,7 +20,8 @@ type TableDef = {
 export const Sidebar = () => {
   const [dialogOpen, setDialogOpen] = useState<boolean>(false);
   const [tables, setTables] = useState<TableDef[]>([]);
-  
+  const [selectedTable, setSelectedTable] = useState<string>();
+
   const handleRefresh = useCallback(async () => {
     await sqlite.init();
 
@@ -48,38 +49,79 @@ export const Sidebar = () => {
 
   const handleDelete = useCallback(async (table: string) => {
     await sqlite.init();
-
     await sqlite.exec(`DROP TABLE ${table}`);
 
     await handleRefresh();
+
+    setSelectedTable(undefined);
   }, [handleRefresh]);
+
+  const tableTree = useMemo(() => (
+    tables
+      .sort((a, b) => a.name.localeCompare(b.name))
+      .map((table) => ({
+        title: (
+          <Flex rootClassName="hover-trigger" align="center" justify="space-between">
+            {table.name}
+            <Button
+              rootClassName="hover-show"
+              icon={<DeleteTwoTone twoToneColor="#eb2f96" />}
+              size="small"
+              title={`Delete ${table.name}`}
+              type="text"
+              onClick={() => handleDelete(table.name)}
+            />
+          </Flex>
+        ),
+        key: table.name,
+        children: table.columns.map(column => ({
+          title: column.name,
+          key: `${table.name}.${column.name}`,
+          icon: <TypeIcon type={column.type} />,
+          selectable: false,
+          children: [
+            { title: column.type.toUpperCase(), key: `${table.name}.${column.name}.type`, selectable: false },
+            { title: `${column.isNotNull ? 'NOT ' : ''}NULL`, key: `${table.name}.${column.name}.null`, selectable: false },
+          ],
+        })),
+      }))
+  ), [tables, handleDelete]);
 
   useEffect(() => {
     handleRefresh()
   }, [handleRefresh]);
 
   return (
-    <div style={{
-      backgroundColor: '#F5F5F5',
-      height: '100%',
-    }}>
-      <div
-        style={{
-          display: 'flex',
-          flexDirection: 'row',
-          gap: 4,
-          padding: 4,
+    <div>
+      <Flex style={{ padding: 4 }} justify="space-between">
+        <Text>Tables</Text>
+        <Flex gap={2}>
+          <Button icon={<ImportOutlined />} size="small" title="Import CSV" type="text" onClick={() => setDialogOpen(true)} />
+          <Button icon={<ReloadOutlined />} size="small" title="Refresh tables" type="text" onClick={handleRefresh} />
+          {selectedTable && (
+            <Button
+              icon={<DeleteTwoTone twoToneColor="#eb2f96" />}
+              size="small"
+              title={`Delete ${selectedTable}`}
+              type="text"
+              onClick={() => {
+                handleDelete(selectedTable);
+                setSelectedTable(undefined);
+              }}
+            />
+          )}
+        </Flex>
+      </Flex>
+      <Tree
+        rootStyle={{ background: 'none' }}
+        blockNode={true}
+        showIcon={true}
+        showLine={true}
+        treeData={tableTree}
+        onSelect={([ key ]) => {
+          setSelectedTable(key?.toString());
         }}
-      >
-        <label style={{ flexGrow: 1 }}>Tables</label>
-        <button className="btn-icon" title="Import CSV" onClick={() => setDialogOpen(true)}><FontAwesomeIcon icon={faArrowUpFromBracket} /></button>
-        <button className="btn-icon" title="Refresh Tables" onClick={handleRefresh}><FontAwesomeIcon icon={faArrowsRotate} /></button>
-      </div>
-      <div style={{ overflowX: 'hidden', overflowY: 'auto' }}>
-        {tables.map((table, index) => (
-          <TableDefinition key={index} definition={table} onDelete={() => handleDelete(table.name)} />
-        ))}
-      </div>
+      />
       <ImportModal open={dialogOpen} onCancel={() => setDialogOpen(false)} />
     </div>
   );

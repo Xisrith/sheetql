@@ -4,6 +4,17 @@ dialog {
   box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
 }
 
+.hover-trigger {
+  & .hover-show {
+    display: none;
+  }
+  &:hover {
+    .hover-show {
+      display: unset;
+    }
+  }
+}
+
 .btn-icon {
   background: none;
   border: none;

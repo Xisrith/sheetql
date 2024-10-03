@@ -4,6 +4,7 @@ import { Dialog } from './Common/Dialog';
 import { sqlite } from '../sqlite';
 import { Spinner } from './Common/Spinner';
 import { TypeIcon } from './Common/TypeIcon';
+import { Button, Form, Input, Modal, Select, Switch, Upload } from 'antd';
 
 type Props = {
   open: boolean;
@@ -164,12 +165,24 @@ export const ImportModal = ({ open, onCancel }: Props) => {
     }
   };
 
+  const footerButtons = () => {
+    const btns = [<Button onClick={handleClose}>Cancel</Button>];
+    if (hasData()) {
+      btns.push(<Button type="primary" onClick={handleImport}>Import</Button>)
+    }
+    return btns;
+  };
+
   return (
-    <Dialog open={open} onCancel={handleClose}>
+    <Modal
+      title="Import CSV"
+      footer={footerButtons()}
+      open={open}
+      onCancel={handleClose}
+    >
       {open && (
         <>
           <div style={{ maxWidth: '90vw', minWidth: '480px', position: 'relative' }}>
-            <h1>Import CSV</h1>
             <input
               accept=".csv"
               type="file"
@@ -179,8 +192,44 @@ export const ImportModal = ({ open, onCancel }: Props) => {
               }}
               onClick={() => setIsLoading(true)}
             />
-            {file &&
               <>
+                <Form labelAlign="left" labelCol={{ span: 7 }} size="small">
+                  <Form.Item label="File" name="file">
+                    <Upload
+                      accept=".csv"
+                      customRequest={(options) => {
+                        setFile(options.file as File);
+                        setIsLoading(false);
+                        options.onSuccess?.('Ok');
+                      }}
+                      >
+                      <Button>Select</Button>
+                    </Upload>
+                  </Form.Item>
+                  {file && <>
+                    <Form.Item
+                      label="Table Name"
+                      name="tableName"
+                      rules={[
+                        { pattern: /^[^\d]/g, message: 'Table Name cannot start with a number' },
+                        { pattern: /^\w+$/g, message: 'Table Name must contain only letters, numbers, and underscores' },
+                      ]}
+                    >
+                      <Input placeholder={defaultTableName} />
+                    </Form.Item>
+                    <Form.Item label="Delimiter" name="delimiter">
+                      <Select defaultValue="comma">
+                        <Select.Option value="comma">Comma</Select.Option>
+                        <Select.Option value="pipe">Pipe</Select.Option>
+                        <Select.Option value="space">Space</Select.Option>
+                        <Select.Option value="custom">Custom</Select.Option>
+                      </Select>
+                    </Form.Item>
+                    <Form.Item label="Data Has Headers" name="dataHasHeaders">
+                      <Switch />
+                    </Form.Item>
+                  </>}
+                </Form>
                 <hr />
                 <div
                   style={{
@@ -218,7 +267,6 @@ export const ImportModal = ({ open, onCancel }: Props) => {
                   <input id="data-has-headers" type="checkbox" style={{ justifySelf: 'left' }} onChange={e => setDataHasHeaders(e.target.checked)} />
                 </div>
               </>
-            }
             {hasData() &&
               <>
                 <div
@@ -251,11 +299,6 @@ export const ImportModal = ({ open, onCancel }: Props) => {
                 </div>
               </>
             }
-            {file && <hr/>}
-            <div style={{ display: 'flex', flexDirection: 'row', gap: 4, justifyContent: 'end' }}>
-              <button onClick={handleClose}>Cancel</button>
-              {hasData() && <button onClick={handleImport}>Import</button>}
-            </div>
           </div>
           {isLoading && (
             <>
@@ -284,6 +327,6 @@ export const ImportModal = ({ open, onCancel }: Props) => {
           )}
         </>
       )}
-    </Dialog>
+    </Modal>
   );
 };

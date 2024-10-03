@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { sqlite } from '../sqlite';
 import { ImportModal } from './ImportModal';
-import { Button, Flex, Typography, Tree } from 'antd';
+import { Button, Flex, Typography, Tree, Popconfirm } from 'antd';
 const { Text } = Typography;
 import { DeleteTwoTone, ImportOutlined, ReloadOutlined } from '@ant-design/icons';
 import { TypeIcon } from './Common/TypeIcon';
@@ -52,8 +52,6 @@ export const Sidebar = () => {
     await sqlite.exec(`DROP TABLE ${table}`);
 
     await handleRefresh();
-
-    setSelectedTable(undefined);
   }, [handleRefresh]);
 
   const tableTree = useMemo(() => (
@@ -63,14 +61,23 @@ export const Sidebar = () => {
         title: (
           <Flex rootClassName="hover-trigger" align="center" justify="space-between">
             {table.name}
-            <Button
-              rootClassName="hover-show"
-              icon={<DeleteTwoTone twoToneColor="#eb2f96" />}
-              size="small"
-              title={`Delete ${table.name}`}
-              type="text"
-              onClick={() => handleDelete(table.name)}
-            />
+            <Popconfirm
+              title={`Delete ${table.name}?`}
+              description="This action cannot be undone."
+              okText="Delete"
+              okType="danger"
+              placement="right"
+              onConfirm={() => handleDelete(table.name)}
+            >
+              <Button
+                rootClassName="hover-show"
+                icon={<DeleteTwoTone twoToneColor="#eb2f96" />}
+                size="small"
+                title={`Delete ${table.name}`}
+                type="text"
+                onClick={(event) => event.stopPropagation()}
+              />
+            </Popconfirm>
           </Flex>
         ),
         key: table.name,
